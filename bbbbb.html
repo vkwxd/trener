@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Мой фитнес-ассистент</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--tx:#1d1d1b;--mut:#6d6c66;--bd:#e4e2da;--ac:#2f7d4f;--ac2:#e8f3ec;--warn:#c2410c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151614;--card:#1f211e;--tx:#ecebe6;--mut:#9a9990;--bd:#32342f;--ac:#5fc08a;--ac2:#1f3226;--warn:#fb923c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#151614;--card:#1f211e;--tx:#ecebe6;--mut:#9a9990;--bd:#32342f;--ac:#5fc08a;--ac2:#1f3226;--warn:#fb923c;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:84px}
+main{max-width:640px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 14px}
+h2{font-size:17px;margin:0 0 10px}
+h3{font-size:16px;margin:16px 0 4px;color:var(--ac)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 3px}
+input,select,textarea{width:100%;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:9px 11px}
+textarea{min-height:64px;resize:vertical}
+.row{display:flex;gap:10px}.row>*{flex:1}
+button{font:inherit;border:0;border-radius:10px;padding:10px 14px;background:var(--ac);color:#fff;cursor:pointer;font-weight:600}
+button.sec{background:var(--ac2);color:var(--ac)}
+button.ghost{background:none;color:var(--mut);padding:4px 8px;font-weight:400}
+button:disabled{opacity:.5}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--ac);width:0}
+.bar.over i{background:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;text-align:center}
+.stats b{display:block;font-size:17px}.stats span{font-size:12px;color:var(--mut)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--bd)}
+.item small{color:var(--mut);display:block}
+.mut{color:var(--mut);font-size:13px}
+.out{white-space:pre-wrap}
+.out p{margin:4px 0}.out .li{padding-left:14px;text-indent:-14px;margin:2px 0}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;background:none;color:var(--mut);border-radius:0;padding:12px 4px;font-size:13px}
+nav button.on{color:var(--ac)}
+.hide{display:none}
+.err{color:var(--warn);font-size:14px;margin-top:6px}
+#prev{max-width:100%;max-height:180px;border-radius:10px;margin-top:8px}
+:root{--bg:#f1f0ea;--card:#fff;--tx:#12130d;--mut:#6a6b60;--bd:#e2e1d6;--ac:#2d6a00;--ac2:#eaf6d4;--onac:#fff;--lime:#c6ff3d;--r:22px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0d09;--card:#16180f;--tx:#f1f2e8;--mut:#8f9283;--bd:#262a1b;--ac:#c6ff3d;--ac2:#232b10;--onac:#10120a}}
+:root[data-theme="dark"]{--bg:#0c0d09;--card:#16180f;--tx:#f1f2e8;--mut:#8f9283;--bd:#262a1b;--ac:#c6ff3d;--ac2:#232b10;--onac:#10120a}
+body{font-family:Manrope,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(900px 420px at 90% -100px,color-mix(in srgb,var(--lime) 24%,transparent),transparent),var(--bg);background-attachment:fixed;padding-bottom:110px}
+h1{font:700 28px/1.1 Unbounded,system-ui,sans-serif;letter-spacing:-.03em;margin:8px 2px 18px}
+h2{font:700 12px Unbounded,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--mut);margin:0 0 14px}
+h3{font:700 14px Unbounded,system-ui,sans-serif;color:var(--ac);margin:22px 0 6px;padding-left:10px;border-left:3px solid var(--lime)}
+section{animation:in .4s ease both}@keyframes in{from{opacity:0;transform:translateY(10px)}}
+@media (prefers-reduced-motion:reduce){section{animation:none}}
+.card{border-radius:var(--r);padding:18px;box-shadow:0 14px 34px -22px rgba(0,0,0,.35)}
+#t-today .card:first-of-type{background:linear-gradient(145deg,#12130d,#27331a);color:#f1f2e8;border:0;position:relative;overflow:hidden;padding:22px}
+#t-today .card:first-of-type::after{content:"";position:absolute;right:-70px;top:-70px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(198,255,61,.35),transparent 70%);pointer-events:none}
+#t-today .card:first-of-type .mut,.stats span{color:#aeb39a}
+#goalTxt{display:inline-block;padding:4px 11px;border-radius:99px;background:rgba(198,255,61,.14);color:var(--lime)!important;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+#eaten{font:700 58px/1 Unbounded,system-ui,sans-serif;color:var(--lime);letter-spacing:-.04em}
+.bar{height:12px;border-radius:99px;background:rgba(255,255,255,.12);margin:14px 0 10px}
+.bar i{border-radius:99px;background:linear-gradient(90deg,#86d900,var(--lime));box-shadow:0 0 18px rgba(198,255,61,.6);transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.bar.over i{background:linear-gradient(90deg,#ff9a3d,#ff5a2d);box-shadow:0 0 18px rgba(255,120,50,.6)}
+.stats>div{background:rgba(255,255,255,.07);border-radius:16px;padding:12px 4px}
+.stats b{font:700 19px Unbounded,system-ui,sans-serif;color:#fff}
+.stats span{font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+label{font-weight:800;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:12px 0 5px}
+input,select,textarea{border-radius:14px;padding:12px 14px;font-weight:600;background:color-mix(in srgb,var(--bg) 70%,var(--card))}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ac);outline-offset:1px}
+button{background:var(--ac);color:var(--onac);border-radius:14px;padding:12px 18px;font-weight:800;transition:transform .12s}
+button:active{transform:scale(.96)}
+.item{border-top:1px dashed var(--bd);padding:13px 0}.item>div:first-child{font-weight:700}
+.out .li{text-indent:0;padding:9px 13px;background:var(--bg);border-radius:12px;margin:6px 0}
+nav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:420px;margin:0 auto;border-radius:24px;border:1px solid var(--bd);background:color-mix(in srgb,var(--card) 80%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);padding:6px;gap:4px;box-shadow:0 18px 40px -14px rgba(0,0,0,.55)}
+nav button{border-radius:18px;padding:12px 4px;font-weight:800;font-size:13px}
+nav button.on{background:var(--lime);color:#12130d}
+</style>
+</head>
+<body>
+<main>
+<section id="t-today">
+  <h1>Сегодня</h1>
+  <div class="card">
+    <div id="goalTxt" class="mut"></div>
+    <div style="font-size:26px;font-weight:700"><span id="eaten">0</span> <span class="mut" style="font-size:15px;font-weight:400">/ <span id="target">—</span> ккал</span></div>
+    <div class="bar" id="kbar"><i></i></div>
+    <div class="stats"><div><b id="sp">0</b><span>белки, г</span></div><div><b id="sf">0</b><span>жиры, г</span></div><div><b id="sc">0</b><span>углеводы, г</span></div></div>
+    <div class="mut" id="macroT" style="margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <h2>Добавить еду</h2>
+    <input type="file" id="photo" accept="image/*" capture="environment">
+    <img id="prev" class="hide" alt="">
+    <label>Описание (необязательно: «200 г гречки и куриная грудка»)</label>
+    <textarea id="desc"></textarea>
+    <div style="margin-top:10px"><button id="analyze">Посчитать калории</button></div>
+    <div id="foodErr" class="err"></div>
+  </div>
+  <div class="card"><h2>Съедено</h2><div id="log"></div></div>
+</section>
+
+<section id="t-plan" class="hide">
+  <h1>Планы</h1>
+  <div class="card">
+    <h2>Тренировки</h2>
+    <button id="genW">Составить программу</button><div class="mut" style="margin-top:6px">Программа собирается встроенным алгоритмом под ваш профиль: без AI, бесплатно и без интернета.</div>
+    <div id="wOut" class="out" style="margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <h2>Питание</h2>
+    <button id="genM">Собрать меню на день</button> <button id="addAll" class="sec hide">Всё в дневник</button>
+    <div id="mOut" style="margin-top:8px"></div><label>Каталог готовых блюд (лучшие под вашу цель — сверху)</label><select id="slot"><option value="b">Завтраки</option><option value="l">Обеды</option><option value="d">Ужины</option><option value="s">Перекусы</option></select><div id="cat"></div>
+  </div>
+  <div class="card">
+    <h2>Спросить тренера</h2>
+    <textarea id="q" placeholder="Например: заменить приседания, болит колено"></textarea>
+    <div style="margin-top:10px"><button id="ask" class="sec">Спросить</button></div>
+    <div id="qOut" class="out" style="margin-top:8px"></div>
+  </div>
+  <div id="planErr" class="err"></div>
+</section>
+
+<section id="t-me" class="hide">
+  <h1>Профиль</h1>
+  <div class="card">
+    <div class="row"><div><label>Пол</label><select id="sex"><option value="m">Мужской</option><option value="f">Женский</option></select></div><div><label>Возраст</label><input id="age" type="number" inputmode="numeric"></div></div>
+    <div class="row"><div><label>Рост, см</label><input id="h" type="number" inputmode="numeric"></div><div><label>Вес, кг</label><input id="w" type="number" inputmode="decimal"></div></div>
+    <label>Цель</label><select id="goal"><option value="recomp">Похудеть и набрать мышцы</option><option value="lose">Только похудеть</option><option value="keep">Держать форму</option><option value="gain">Набрать массу</option></select>
+    <label>Обычная активность вне тренировок</label><select id="act"><option value="1.3">Сидячая</option><option value="1.45">Умеренная</option><option value="1.6">Высокая</option></select>
+    <div class="row"><div><label>Тренировок в неделю</label><input id="days" type="number" inputmode="numeric" min="1" max="7"></div><div><label>Длительность, мин</label><input id="dur" type="number" inputmode="numeric"></div></div>
+    <label>Здоровье</label><select id="back"><option value="1">Спина: протрузии и экструзия (щадящая программа)</option><option value="0">Ограничений нет</option></select><label>Где тренируюсь</label><select id="equip"><option value="gym">Тренажёрный зал</option><option value="db">Дом: гантели</option><option value="bw">Только вес тела</option></select>
+    <label>Опыт, травмы, ограничения в еде</label><textarea id="notes"></textarea>
+    <div style="margin-top:10px"><button id="saveP">Сохранить</button> <span id="saved" class="mut"></span></div>
+    <div id="calc" class="mut" style="margin-top:10px"></div>
+  </div>
+  <div class="card mut">Программа для спины собрана по общим принципам и не заменяет врача: согласуйте её с врачом или реабилитологом. Данные хранятся только в этом браузере. Калории по фото — оценка, возможна погрешность 15–25%. Это не медицинская рекомендация.</div>
+</section>
+</main>
+<nav><button data-t="today" class="on">🔥 Сегодня</button><button data-t="plan">🏋️ Планы</button><button data-t="me">👤 Профиль</button></nav>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='fitapp_v1';
+let S={p:{sex:'m',age:30,h:175,w:75,goal:'recomp',act:'1.45',days:3,dur:60,equip:'gym',back:'1',notes:''},log:{},plans:{w:'',m:''}};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const today=()=>new Date().toLocaleDateString('sv');
+
+// tabs
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+  ['today','plan','me'].forEach(t=>$('t-'+t).classList.toggle('hide',t!==b.dataset.t));
+  window.scrollTo(0,0);
+});
+
+// targets
+function targets(){
+  const p=S.p,w=+p.w,h=+p.h,a=+p.age;
+  const bmr=10*w+6.25*h-5*a+(p.sex==='m'?5:-161);
+  let k=bmr*(+p.act);
+  k+=({lose:-400,recomp:-200,gain:300})[p.goal]||0;
+  k=Math.round(k/10)*10;
+  const pr=Math.round(w*(({lose:2,recomp:2.2})[p.goal]||1.8)),f=Math.round(w*0.85),c=Math.max(0,Math.round((k-pr*4-f*9)/4));
+  return {k,pr,f,c,bmr:Math.round(bmr)};
+}
+const GOALS={recomp:'Похудение и набор мышц',lose:'Похудение',keep:'Поддержание формы',gain:'Набор массы'};
+
+// profile form
+const ids=['sex','age','h','w','goal','act','days','dur','equip','back','notes'];
+ids.forEach(i=>$(i).value=S.p[i]??(i==='back'?'1':i==='equip'?'gym':''));
+$('saveP').onclick=()=>{ids.forEach(i=>S.p[i]=$(i).value);save();render();showCat();$('saved').textContent='Сохранено ✓';setTimeout(()=>$('saved').textContent='',1500)};
+
+// food log
+function render(){
+  const T=targets(),items=S.log[today()]||[];
+  const sum=items.reduce((s,x)=>({k:s.k+x.kcal,p:s.p+x.p,f:s.f+x.f,c:s.c+x.c}),{k:0,p:0,f:0,c:0});
+  $('goalTxt').textContent=GOALS[S.p.goal];
+  $('eaten').textContent=Math.round(sum.k);$('target').textContent=T.k;
+  $('sp').textContent=Math.round(sum.p);$('sf').textContent=Math.round(sum.f);$('sc').textContent=Math.round(sum.c);
+  $('macroT').textContent='Цель: белки '+T.pr+' г · жиры '+T.f+' г · углеводы '+T.c+' г';
+  const bar=$('kbar');bar.classList.toggle('over',sum.k>T.k);bar.firstElementChild.style.width=Math.min(100,sum.k/T.k*100)+'%';
+  $('calc').textContent='Базовый обмен ≈ '+T.bmr+' ккал. Цель по калориям: '+T.k+' ккал/день, белки '+T.pr+' г, жиры '+T.f+' г, углеводы '+T.c+' г.';
+  const box=$('log');box.textContent='';
+  if(!items.length){const d=document.createElement('div');d.className='mut';d.textContent='Пока ничего не добавлено.';box.appendChild(d)}
+  items.forEach((x,i)=>{
+    const r=document.createElement('div');r.className='item';
+    const l=document.createElement('div');const t=document.createElement('div');t.textContent=x.name;
+    const s=document.createElement('small');s.textContent=Math.round(x.kcal)+' ккал · Б '+Math.round(x.p)+' · Ж '+Math.round(x.f)+' · У '+Math.round(x.c)+(x.note?' · '+x.note:'');
+    l.append(t,s);
+    const b=document.createElement('button');b.className='ghost';b.textContent='✕';b.setAttribute('aria-label','Удалить');
+    b.onclick=()=>{items.splice(i,1);save();render()};
+    r.append(l,b);box.appendChild(r);
+  });
+  renderOut($('wOut'),S.plans.w);
+}
+function renderOut(el,txt){
+  el.textContent='';
+  (txt||'').split('\n').forEach(line=>{
+    line=line.replace(/\*\*/g,'').trimEnd();if(!line.trim())return;
+    let n;
+    if(/^#{1,4}\s/.test(line)){n=document.createElement('h3');n.textContent=line.replace(/^#+\s*/,'')}
+    else if(/^\s*[-•*]\s/.test(line)){n=document.createElement('div');n.className='li';n.textContent='• '+line.replace(/^\s*[-•*]\s*/,'')}
+    else{n=document.createElement('p');n.textContent=line}
+    el.appendChild(n);
+  });
+}
+
+// photo
+let photoBlob=null;
+function shrink(file){return new Promise((res,rej)=>{
+  const img=new Image(),u=URL.createObjectURL(file);
+  img.onload=()=>{const m=1024,k=Math.min(1,m/Math.max(img.width,img.height));
+    const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);
+    c.toBlob(b=>b?res(b):rej(new Error('img')),'image/jpeg',.82)};
+  img.onerror=()=>rej(new Error('img'));img.src=u});}
+$('photo').onchange=async e=>{
+  const f=e.target.files[0];photoBlob=null;$('prev').classList.add('hide');if(!f)return;
+  try{photoBlob=await shrink(f);$('prev').src=URL.createObjectURL(photoBlob);$('prev').classList.remove('hide')}catch(x){$('foodErr').textContent='Не удалось прочитать фото.'}
+};
+
+async function getSample(){
+  const s=await claude.use('sample');
+  if(!s)throw new Error('AI недоступен: откройте страницу в claude.ai и разрешите доступ.');
+  return s;
+}
+const errTxt=e=>e&&e.code==='rate_limited'?'Слишком много запросов, подождите минуту.':e&&e.code==='not_granted'?'Доступ к AI не разрешён.':(e&&e.message)||'Ошибка';
+
+$('analyze').onclick=async()=>{
+  const d=$('desc').value.trim();$('foodErr').textContent='';
+  if(!photoBlob&&!d){$('foodErr').textContent='Добавьте фото или описание.';return}
+  const btn=$('analyze');btn.disabled=true;btn.textContent='Считаю…';
+  try{
+    const s=await getSample();
+    const prompt='Ты нутрициолог. Определи блюда '+(photoBlob?'на фото ':'')+(d?'и в описании: «'+d+'». Если граммы указаны, используй их. ':'. ')+
+      'Оцени калории и БЖУ для всей порции целиком. Ответь только JSON без пояснений и без markdown: {"name":"короткое название по-русски","kcal":число,"p":число,"f":число,"c":число,"note":"допущение о весе порции, до 8 слов"}';
+    const opts={cache:false,modelTier:'default'};
+    if(photoBlob){const l=await s.limits();if(!l.images)throw new Error('Фото сейчас недоступны, опишите еду текстом.');opts.images=[photoBlob]}
+    const r=await s.json(prompt,opts);
+    const it={name:String(r.name||'Блюдо').slice(0,80),kcal:+r.kcal||0,p:+r.p||0,f:+r.f||0,c:+r.c||0,note:String(r.note||'').slice(0,60)};
+    (S.log[today()]=S.log[today()]||[]).push(it);save();render();
+    $('desc').value='';$('photo').value='';photoBlob=null;$('prev').classList.add('hide');
+  }catch(e){$('foodErr').textContent=errTxt(e)}
+  btn.disabled=false;btn.textContent='Посчитать калории';
+};
+
+// plans
+function ctx(){
+  const p=S.p,T=targets();
+  return 'Профиль: '+(p.sex==='m'?'мужчина':'женщина')+', '+p.age+' лет, рост '+p.h+' см, вес '+p.w+' кг. Цель: '+GOALS[S.p.goal]+
+  '. Тренировок в неделю: '+p.days+', по '+p.dur+' мин. Оборудование: '+(p.equip||'не указано')+'. Опыт, травмы, ограничения: '+(p.back!=='0'?'протрузии и экструзия межпозвоночных дисков, исключи осевую нагрузку и скручивания; ':'')+(p.notes||'нет')+
+  '. Суточная цель: '+T.k+' ккал, белки '+T.pr+' г, жиры '+T.f+' г, углеводы '+T.c+' г.';
+}
+async function gen(kind,btn,out){
+  $('planErr').textContent='';const old=btn.textContent;btn.disabled=true;btn.textContent='Составляю…';
+  try{
+    const s=await getSample();
+    const task=kind==='w'
+      ?'Составь недельный план тренировок: по дням, упражнения с подходами×повторениями и отдыхом, разминка, как прогрессировать от недели к неделе. Учитывай оборудование и ограничения.'
+      :'Составь план питания: 3 варианта дня (завтрак, обед, ужин, перекусы) с граммовками и ориентировочными ккал/БЖУ каждого приёма, укладывающиеся в суточную цель, плюс короткий список продуктов. Учитывай ограничения в еде.';
+    const prompt=ctx()+'\n\n'+task+'\nПиши по-русски, кратко и по делу. Формат: заголовки со знаком ## и списки с дефисом, без таблиц.';
+    const r=await s(prompt,{cache:false,modelTier:'default',onText:({text})=>{renderOut(out,text)}});
+    S.plans[kind]=r.text;save();renderOut(out,r.text);
+  }catch(e){$('planErr').textContent=errTxt(e);if(e&&e.text){S.plans[kind]=e.text;save()}}
+  btn.disabled=false;btn.textContent=old;
+}
+// встроенный генератор тренировок
+const EX={gym:{sq:'Присед со штангой или жим ногами',hi:'Румынская тяга',hp:'Жим лёжа',vp:'Жим гантелей сидя',hr:'Тяга блока к поясу',vr:'Тяга верхнего блока',lun:'Выпады с гантелями',cal:'Подъём на носки в тренажёре',arm:'Бицепс и трицепс на блоках',core:'Планка'},
+db:{sq:'Гоблет-присед',hi:'Румынская тяга с гантелями',hp:'Жим гантелей лёжа или отжимания',vp:'Жим гантелей стоя',hr:'Тяга гантели в наклоне',vr:'Подтягивания или пуловер с гантелью',lun:'Болгарские сплит-приседы',cal:'Подъём на носки с гантелями',arm:'Сгибания на бицепс и разгибания на трицепс',core:'Планка'},
+bw:{sq:'Приседания с паузой',hi:'Ягодичный мостик на одной ноге',hp:'Отжимания',vp:'Пайк-отжимания',hr:'Австралийские подтягивания под столом',vr:'Подтягивания или негативные подтягивания',lun:'Болгарские сплит-приседы',cal:'Подъём на носки на ступеньке',arm:'Обратные отжимания от стула',core:'Планка'}};
+const CK='Каркас спины: птица-собака, боковая планка, облегчённые скручивания McGill';
+const EXS={gym:{sq:'Жим ногами, неглубоко, поясница прижата к спинке',hi:'Ягодичный мостик с гантелью или штангой на бёдрах',hp:'Жим от груди в тренажёре или жим гантелей на скамье',vp:'Жим гантелей сидя с упором для спины',hr:'Тяга в тренажёре с упором грудью',vr:'Тяга верхнего блока к груди, сидя',lun:'Сгибание ног лёжа в тренажёре',cal:'Подъём на носки в тренажёре сидя',arm:'Бицепс и трицепс на блоках',core:CK},
+db:{sq:'Присед на скамью с гантелью у груди, неглубоко, лёгкий вес',hi:'Ягодичный мостик с гантелью на бёдрах',hp:'Жим гантелей лёжа',vp:'Жим гантелей сидя с упором для спины',hr:'Тяга гантелей лёжа грудью на наклонной скамье',vr:'Тяга резины к груди сидя или пуловер с гантелью лёжа',lun:'Скользящие сгибания ног лёжа (на полотенце)',cal:'Подъём на носки с гантелями у опоры',arm:'Сгибания на бицепс и разгибания на трицепс с гантелями',core:CK},
+bw:{sq:'Приседания на скамью, неглубоко',hi:'Ягодичный мостик на двух ногах',hp:'Отжимания с упором руками на скамью',vp:'Жим резины над головой, сидя с опорой',hr:'Тяга резины сидя к поясу',vr:'Тяга резины сверху вниз',lun:'Скользящие сгибания ног лёжа',cal:'Подъём на носки на ступеньке',arm:'Сгибания рук с резиной и обратные отжимания от скамьи',core:CK}};
+const UP=['hp','hr','vp','vr','arm'],LO=['sq','hi','lun','cal','core'],FB=[['sq','hp','hr','hi','core'],['hi','vp','vr','lun','arm'],['sq','hp','hr','hi','core']];
+function buildWorkout(){const p=S.p,safe=p.back!=='0',e=(safe?EXS:EX)[p.equip]||(safe?EXS:EX).gym,n=Math.min(6,Math.max(2,+p.days||3)),g=p.goal;
+let days;if(n<=3)days=FB.slice(0,n).map((d,i)=>['День '+(i+1)+': всё тело',d]);
+else{const P=['Толчок',['hp','vp','arm']],Q=['Тяга',['vr','hr','arm']],L=['Ноги',LO];
+const base=n===4?[['Верх',UP],['Низ',LO],['Верх',UP],['Низ',LO]]:n===5?[P,Q,L,['Верх',UP],['Низ',LO]]:[P,Q,L,P,Q,L];
+days=base.map((d,i)=>['День '+(i+1)+': '+d[0],d[1]])}
+const cut=(+p.dur||60)<45?4:9,rep=(k,j)=>k==='core'?(safe?'3 круга по 6–8 удержаний по 8–10 с':'3×30–45 с'):k==='cal'?'4×12–20':j<2?(g==='lose'||safe?'3×8–12, отдых 90 с':'4×6–10, отдых 2 мин'):'3×10–15, отдых 60 с';
+const o=['## Программа: '+n+' дн. в неделю, цель — '+GOALS[g].toLowerCase(),'- Разминка 5–7 минут: лёгкое кардио, суставная гимнастика и 1–2 разминочных подхода первого упражнения.'];
+days.forEach(d=>{o.push('## '+d[0]);d[1].slice(0,cut).forEach((k,j)=>o.push('- '+e[k]+': '+rep(k,j)))});
+o.push('## Кардио и шаги',g==='gain'?'- 1–2 лёгких кардио по 20 минут, около 7 тысяч шагов в день.':'- 2–3 раза в неделю 25–40 минут быстрой ходьбы или лёгкого кардио, 8–10 тысяч шагов в день.');
+o.push('## Прогрессия','- Двойная прогрессия: добавляйте повторения до верхней границы во всех подходах, затем прибавьте вес на 2,5–5% и вернитесь к нижней границе.',safe?'- Оставляйте 2–3 повторения в запасе, до отказа не работайте: техника важнее веса.':'- Оставляйте 1–2 повторения в запасе, последний подход можно довести почти до отказа.','- Каждую 5-ю неделю разгрузка: те же упражнения, подходов на 40% меньше.','- Сон 7–9 часов и белок по цели из профиля.');
+if(g==='recomp')o.push('- Рекомпозиция идёт медленно: вес на весах меняется слабо, следите за обхватами, фото и рабочими весами.');
+if(safe)o.push('## Для спины (важно)','- Поясница в нейтральном положении в каждом упражнении, без округления и прогиба. Лёгкий вес с чистой техникой лучше тяжёлого.','- Исключены: штанга на плечах, тяги с пола, наклоны с весом, скручивания корпуса с нагрузкой, прыжки, висы.','- Каркас спины делайте в начале тренировки, нагрузку повышайте медленно, между подходами ходите.','- Остановитесь при боли в спине, отдающей в ногу, онемении или слабости в ноге, и покажите программу врачу или реабилитологу.');
+return o.join('\n')}
+$('genW').onclick=()=>{S.plans.w=buildWorkout();save();renderOut($('wOut'),S.plans.w)};
+// готовые блюда: [приём, название, ккал, белки, жиры, углеводы]
+const D=[['b','Омлет из 3 яиц с овощами и цельнозерновым тостом',420,27,24,24],['b','Творог 5% 200 г с ягодами и 30 г овсянки',340,36,11,28],['b','Овсянка на молоке с бананом и мерной ложкой протеина',450,32,9,62],['b','Греческий йогурт 250 г с мюсли и орехами',380,28,14,34],['b','Сырники из творога (3 шт.) со сметаной',400,32,15,34],
+['l','Куриная грудка 150 г, гречка 180 г, салат',520,45,10,60],['l','Индейка 150 г с булгуром и овощами',540,42,14,55],['l','Лосось 150 г, рис 150 г, брокколи',610,38,24,55],['l','Тушёная говядина 150 г с картофелем и овощами',560,40,20,50],['l','Чечевичный суп с курицей и ломтём хлеба',430,35,9,50],
+['d','Треска 200 г, киноа 120 г, овощи',400,40,8,40],['d','Куриные бёдра без кожи 150 г с запечёнными овощами',430,36,22,20],['d','Салат с тунцом, яйцом и фасолью',330,38,12,14],['d','Творожная запеканка 200 г',320,30,9,28],['d','Куриный салат с нутом и оливковым маслом',450,38,16,36],
+['s','Протеиновый коктейль на молоке',220,30,5,14],['s','Яблоко и 30 г миндаля',260,7,15,26],['s','Кефир 1% 250 мл и банан',190,9,3,33],['s','Хумус 50 г с овощными палочками',190,6,10,17],['s','Два варёных яйца и огурец',160,13,10,2]];
+const SL={b:'Завтрак',l:'Обед',d:'Ужин',s:'Перекус'};
+const sc=a=>S.p.goal==='gain'?a[2]:a[3]*4/a[2];
+const byslot=s=>D.filter(a=>a[0]===s).sort((x,y)=>sc(y)-sc(x));
+const dish=(a,m)=>({name:a[1],kcal:a[2]*m,p:a[3]*m,f:a[4]*m,c:a[5]*m,note:m===1?'':'порция ×'+m.toFixed(1)});
+const add=x=>{(S.log[today()]=S.log[today()]||[]).push(x);save();render()};
+function row(x,label,fn){const r=document.createElement('div');r.className='item';const l=document.createElement('div'),t=document.createElement('div'),s=document.createElement('small');t.textContent=(label?label+': ':'')+x.name;s.textContent=Math.round(x.kcal)+' ккал · Б '+Math.round(x.p)+' · Ж '+Math.round(x.f)+' · У '+Math.round(x.c)+(x.note?' · '+x.note:'');l.append(t,s);r.appendChild(l);const b=document.createElement('button');b.className='sec';b.textContent='+';b.setAttribute('aria-label','Добавить в дневник');b.onclick=()=>{fn();b.textContent='✓'};r.appendChild(b);return r}
+function showCat(){const c=$('cat');c.textContent='';byslot($('slot').value).forEach(a=>c.appendChild(row(dish(a,1),'',()=>add(dish(a,1)))))}
+let menu=[];
+function showMenu(){const m=$('mOut');m.textContent='';menu.forEach((x,i)=>m.appendChild(row(x,SL['blds'[i]],()=>add(x))));const T=targets(),t=menu.reduce((s,x)=>({k:s.k+x.kcal,p:s.p+x.p}),{k:0,p:0}),d=document.createElement('div');d.className='mut';d.style.marginTop='6px';d.textContent='Итого: '+Math.round(t.k)+' ккал, белки '+Math.round(t.p)+' г. Цель: '+T.k+' ккал, '+T.pr+' г.';m.appendChild(d);$('addAll').classList.remove('hide')}
+$('genM').onclick=()=>{const T=targets(),pick=s=>{const l=byslot(s).slice(0,3);return l[Math.floor(Math.random()*l.length)]};const sel=['b','l','d','s'].map(pick),tot=sel.reduce((s,a)=>s+a[2],0),m=Math.round(Math.min(1.35,Math.max(.75,T.k/tot))*10)/10;menu=sel.map(a=>dish(a,m));showMenu()};
+$('addAll').onclick=()=>{menu.forEach(x=>add(x));$('addAll').classList.add('hide')};
+$('slot').onchange=showCat;showCat();
+$('ask').onclick=async()=>{
+  const q=$('q').value.trim();if(!q)return;$('planErr').textContent='';
+  const btn=$('ask');btn.disabled=true;
+  try{
+    const s=await getSample();
+    const prompt=ctx()+'\n\nТекущий план тренировок:\n'+(S.plans.w||'нет')+'\n\nВопрос: '+q+'\n\nОтветь по-русски коротко и практично, как личный тренер. При боли или травме советуй обратиться к врачу.';
+    const r=await s(prompt,{cache:false,onText:({text})=>renderOut($('qOut'),text)});
+    renderOut($('qOut'),r.text);
+  }catch(e){$('planErr').textContent=errTxt(e)}
+  btn.disabled=false;
+};
+render();
+</script>
+</body>
+</html>
